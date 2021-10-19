@@ -1,34 +1,37 @@
+using System;
+using System.IO;
 using System.IO.Compression;
 
-namespace NewWorldLib.Compression;
-
-public class DataDecompressor
+namespace NewWorldLib.Compression
 {
-    public static byte[] DecompressOodle(byte[] compressedData, int decompressedLength)
+    public class DataDecompressor
     {
-        if (OperatingSystem.IsWindows())
+        public static byte[] DecompressOodle(byte[] compressedData, int decompressedLength)
         {
-            var decompressed = new byte[decompressedLength];
-            Oodle.Decompress(compressedData, 0, compressedData.Length, decompressed, 0, decompressedLength);
-            return decompressed;    
-        }
-        else
-        {
-            return Array.Empty<byte>();
-        }
-    }
-
-    public static byte[] DecompressDeflate(byte[] compressedData, int decompressedLength)
-    {
-        using var decompressedStream = new MemoryStream();
-        using (var compressStream = new MemoryStream(compressedData))
-        {
-            using (var deflateStream = new DeflateStream(compressStream, CompressionMode.Decompress))
+            if (OperatingSystem.IsWindows())
             {
-                deflateStream.CopyTo(decompressedStream);
+                var decompressed = new byte[decompressedLength];
+                Oodle.Decompress(compressedData, 0, compressedData.Length, decompressed, 0, decompressedLength);
+                return decompressed;
+            }
+            else
+            {
+                return Array.Empty<byte>();
             }
         }
 
-        return decompressedStream.ToArray();
+        public static byte[] DecompressDeflate(byte[] compressedData, int decompressedLength)
+        {
+            using var decompressedStream = new MemoryStream();
+            using (var compressStream = new MemoryStream(compressedData))
+            {
+                using (var deflateStream = new DeflateStream(compressStream, CompressionMode.Decompress))
+                {
+                    deflateStream.CopyTo(decompressedStream);
+                }
+            }
+
+            return decompressedStream.ToArray();
+        }
     }
 }

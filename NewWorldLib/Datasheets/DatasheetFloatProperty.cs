@@ -1,6 +1,7 @@
-namespace NewWorldLib.Datasheets;
-
-public class DatasheetFloatProperty : DatasheetProperty
+namespace NewWorldLib.Datasheets
 {
-    public float? Value { get; set; }
+    public class DatasheetFloatProperty : DatasheetProperty
+    {
+        public float? Value { get; set; }
+    }
 }

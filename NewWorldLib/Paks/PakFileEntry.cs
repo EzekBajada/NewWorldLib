@@ -1,10 +1,12 @@
+using System;
 using System.Data;
+using System.IO;
 using NewWorldLib.Compression;
 using NewWorldLib.Extensions;
 
-namespace NewWorldLib;
-
-public class PakFileEntry : IDisposable
+namespace NewWorldLib.Paks
+{
+    public class PakFileEntry : IDisposable
 {
     public string Name { get; set; }
     public int Method { get; set; }
@@ -36,6 +38,7 @@ public class PakFileEntry : IDisposable
             return;
         }
 
+        
         Reader.BaseStream.Seek(Position, SeekOrigin.Begin);
         if (!Parse())
         {
@@ -132,4 +135,5 @@ public class PakFileEntry : IDisposable
     }
 
     public void Dispose() => Reader?.Dispose();
+}
 }

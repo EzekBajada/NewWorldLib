@@ -1,6 +1,9 @@
-namespace NewWorldLib.Datasheets;
-
-public class DatasheetIntProperty : DatasheetProperty
+namespace NewWorldLib.Datasheets
 {
-    public int? Value { get; set; }
+    public class DatasheetIntProperty : DatasheetProperty
+    {
+        public int? Value { get; set; }
+    } 
 }
+
+

@@ -1,9 +1,10 @@
-namespace NewWorldLib.Datasheets.Internal;
-
-public enum DatasheetColumnType
+namespace NewWorldLib.Datasheets.Internal
 {
-    Unknown,
-    String,
-    Float,
-    Int,
+    public enum DatasheetColumnType
+    {
+        Unknown,
+        String,
+        Float,
+        Int,
+    }
 }

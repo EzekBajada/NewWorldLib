@@ -1,43 +1,45 @@
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace NewWorldLib.Datasheets;
-
-public class DatasheetPropertyJsonConverter : JsonConverter<DatasheetProperty>
+namespace NewWorldLib.Datasheets
 {
-    public override DatasheetProperty? Read(ref Utf8JsonReader reader, Type typeToConvert,
-        JsonSerializerOptions options)
+    public class DatasheetPropertyJsonConverter : JsonConverter<DatasheetProperty>
     {
-        throw new NotImplementedException();
-    }
+        public override DatasheetProperty? Read(ref Utf8JsonReader reader, Type typeToConvert,
+            JsonSerializerOptions options)
+        {
+            throw new NotImplementedException();
+        }
 
-    public override void Write(Utf8JsonWriter writer, DatasheetProperty value, JsonSerializerOptions options)
-    {
-        if (value is DatasheetIntProperty intProperty)
+        public override void Write(Utf8JsonWriter writer, DatasheetProperty value, JsonSerializerOptions options)
         {
-            if (intProperty.Value.HasValue)
+            if (value is DatasheetIntProperty intProperty)
             {
-                writer.WriteNumberValue(intProperty.Value.Value);
+                if (intProperty.Value.HasValue)
+                {
+                    writer.WriteNumberValue(intProperty.Value.Value);
+                }
+                else
+                {
+                    writer.WriteNullValue();
+                }
             }
-            else
+            else if (value is DatasheetFloatProperty floatProperty)
             {
-                writer.WriteNullValue();
+                if (floatProperty.Value.HasValue)
+                {
+                    writer.WriteNumberValue(floatProperty.Value.Value);
+                }
+                else
+                {
+                    writer.WriteNullValue();
+                }
             }
-        }
-        else if (value is DatasheetFloatProperty floatProperty)
-        {
-            if (floatProperty.Value.HasValue)
+            else if (value is DatasheetStringProperty stringProperty)
             {
-                writer.WriteNumberValue(floatProperty.Value.Value);
+                writer.WriteStringValue(stringProperty.Value);
             }
-            else
-            {
-                writer.WriteNullValue();
-            }
-        }
-        else if (value is DatasheetStringProperty stringProperty)
-        {
-            writer.WriteStringValue(stringProperty.Value);
         }
     }
 }

@@ -1,6 +1,9 @@
-namespace NewWorldLib.Datasheets.Internal;
+using System.Collections.Generic;
 
-public class DatasheetRow
+namespace NewWorldLib.Datasheets.Internal
 {
-    public List<DatasheetCell> Cells { get; set; } = new();
+    public class DatasheetRow
+    {
+        public List<DatasheetCell> Cells { get; set; } = new();
+    } 
 }

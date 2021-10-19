@@ -1,9 +1,12 @@
+using System.Collections.Generic;
+using System.IO;
 using NewWorldLib.Datasheets.Internal;
+using NewWorldLib.Datasheets.Internals;
 using NewWorldLib.Extensions;
 
-namespace NewWorldLib.Datasheets;
-
-public class Datasheet
+namespace NewWorldLib.Datasheets
+{
+    public class Datasheet
 {
     public List<Dictionary<string, DatasheetProperty>> Items { get; } = new();
 
@@ -36,11 +39,11 @@ public class Datasheet
                     DatasheetColumnType.Int => new DatasheetIntProperty
                     {
                         Name = column.ColumnName,
-                        Value = columnValue.ValueString == "" ? null : int.Parse(columnValue.ValueString)
+                        Value = columnValue.ValueString == "" ? null : int.Parse((string) columnValue.ValueString)
                     },
                     DatasheetColumnType.Float => new DatasheetFloatProperty
                     {
-                        Value = columnValue.ValueString == "" ? null : float.Parse(columnValue.ValueString)
+                        Value = columnValue.ValueString == "" ? null : float.Parse((string) columnValue.ValueString)
                     },
                     DatasheetColumnType.String => new DatasheetStringProperty
                     {
@@ -137,4 +140,5 @@ public class Datasheet
 
         return result;
     }
+}
 }

@@ -1,39 +1,41 @@
 using System.Text.Json.Serialization;
 
-namespace NewWorldLib.Datasheets;
-
-[JsonConverter(typeof(DatasheetPropertyJsonConverter))]
-public abstract class DatasheetProperty
+namespace NewWorldLib.Datasheets
 {
-    public string Name { get; init; }
-
-    public int? ToIntValue()
+    
+    [JsonConverter(typeof(DatasheetPropertyJsonConverter))]
+    public abstract class DatasheetProperty
     {
-        if (this is DatasheetIntProperty intProperty)
+        public string Name { get; init; }
+
+        /*public int? ToIntValue()
         {
-            return intProperty.Value;
+            if (this is DatasheetIntProperty intProperty)
+            {
+                return intProperty.Value;
+            }
+
+            return null;
         }
 
-        return null;
-    }
-
-    public float? ToFloatValue()
-    {
-        if (this is DatasheetFloatProperty floatProperty)
+        public float? ToFloatValue()
         {
-            return floatProperty.Value;
-        }
+            if (this is DatasheetFloatProperty floatProperty)
+            {
+                return floatProperty.Value;
+            }
 
-        return null;
-    }
+            return null;
+        }*/
 
-    public string ToStringValue()
-    {
-        if (this is DatasheetStringProperty stringProperty)
+        public string ToStringValue()
         {
-            return stringProperty.Value;
-        }
+            if (this is DatasheetStringProperty stringProperty)
+            {
+                return stringProperty.Value;
+            }
 
-        return null;
+            return null;
+        }
     }
 }

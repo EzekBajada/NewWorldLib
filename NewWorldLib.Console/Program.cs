@@ -1,6 +1,10 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 using NewWorldLib;
 using NewWorldLib.Datasheets;
+using NewWorldLib.Paks;
 
 void ReadPaks()
 {
@@ -13,13 +17,20 @@ void ReadPaks()
     var entries = new HashSet<string>();
 
     foreach (var file in files)
-    {
-        using var pakFile = PakFile.Parse(file);
-        // pakFile.Save(outputDir);
+    { 
+        var pakFile = PakFile.Parse(file);
+        
+       // pakFile.Save(outputDir);
         foreach (var entryName in pakFile.Entries.Keys)
         {
             var entry = pakFile.Entries[entryName];
             entries.Add(entryName);
+            
+            //Open stream again
+            var stream = File.OpenRead(file);
+            entry.Reader = new BinaryReader(stream);
+
+            
             if (entry.Method != 15)
             {
                 Console.WriteLine(entryName);
@@ -43,7 +54,7 @@ void ReadDatasheets()
     Console.WriteLine(json);
 }
 
-// ReadPaks();
-ReadDatasheets();
+ReadPaks();
+//ReadDatasheets();
 
 Console.WriteLine("Done");
