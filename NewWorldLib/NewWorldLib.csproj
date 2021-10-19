@@ -12,4 +12,8 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Oodle.NET" Version="1.0.1" />
+    </ItemGroup>
+
 </Project>

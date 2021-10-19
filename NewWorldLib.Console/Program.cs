@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using NewWorldLib;
 using NewWorldLib.Datasheets;
@@ -15,27 +16,27 @@ void ReadPaks()
     var outputDir = "extracted";
     var files = Directory.GetFiles(dir, "*.pak", SearchOption.AllDirectories);
     var entries = new HashSet<string>();
-
+    
     foreach (var file in files)
-    { 
+    {
         var pakFile = PakFile.Parse(file);
+
+        /*var dataSheets = pakFile.Entries
+            .Where(x => x.Key.Contains(@".datasheet"))
+            .ToList();*/
         
-       // pakFile.Save(outputDir);
-        foreach (var entryName in pakFile.Entries.Keys)
+        // pakFile.Save(outputDir);
+        foreach (var entry in pakFile.Entries)
         {
-            var entry = pakFile.Entries[entryName];
-            entries.Add(entryName);
-            
+            var entryValue = entry.Value;
+            entries.Add(entry.Key);
+        
             //Open stream again
             var stream = File.OpenRead(file);
-            entry.Reader = new BinaryReader(stream);
-
+            entryValue.Reader = new BinaryReader(stream);
             
-            if (entry.Method != 15)
-            {
-                Console.WriteLine(entryName);
-                entry.Save(outputDir);
-            }
+            Console.WriteLine(entry.Key);
+            entryValue.Save(outputDir);
         }
     }
 
@@ -45,16 +46,29 @@ void ReadPaks()
 void ReadDatasheets()
 {
     Console.WriteLine("Read Datasheets");
-    var file = "/Users/razfriman/Downloads/datatables/javelindata_tradeskillmining.datasheet";
-    var datasheet = Datasheet.Parse(file);
-    var json = JsonSerializer.Serialize(datasheet, new JsonSerializerOptions()
+   // var file = "/Users/razfriman/Downloads/datatables/javelindata_tradeskillmining.datasheet";
+    var allDataSheets = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.datasheet", SearchOption.AllDirectories);
+
+    foreach (var dataSheet in allDataSheets)
     {
-        WriteIndented = true
-    });
-    Console.WriteLine(json);
+        var datasheetParsed = Datasheet.Parse(dataSheet);
+        var json = JsonSerializer.Serialize(datasheetParsed, new JsonSerializerOptions()
+        {
+            WriteIndented = true
+        });
+
+        var pos = dataSheet.LastIndexOf("\\") + 1;
+        var name = dataSheet.Substring(pos, dataSheet.Length - pos);
+        
+        var fullPath = Path.Combine("jsons",  name.Replace(".datasheet", ".json"));
+        Directory.CreateDirectory(Path.GetDirectoryName(fullPath) ?? string.Empty);
+        File.WriteAllText(fullPath, json);
+        
+        Console.WriteLine(json);
+    }
 }
 
 ReadPaks();
-//ReadDatasheets();
+ReadDatasheets();
 
 Console.WriteLine("Done");
