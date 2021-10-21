@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using NewWorldLib;
 using NewWorldLib.Datasheets;
 using NewWorldLib.Paks;
 
-void ReadPaks()
+static void ReadPaks()
 {
     Console.WriteLine("Read Paks");
     var dir = OperatingSystem.IsWindows()
         ? @"D:\SteamLibrary\steamapps\common\New World\assets"
         : "/Users/razfriman/Downloads/NEW WORLD/assets";
-    var outputDir = "extracted";
+    const string outputDir = "extracted";
     var files = Directory.GetFiles(dir, "*.pak", SearchOption.AllDirectories);
     var entries = new HashSet<string>();
     
@@ -21,12 +20,11 @@ void ReadPaks()
     {
         var pakFile = PakFile.Parse(file);
 
-        /*var dataSheets = pakFile.Entries
-            .Where(x => x.Key.Contains(@".datasheet"))
-            .ToList();*/
+        var dataSheets = pakFile.Entries
+            .Where(x => x.Key.Contains(@".datasheet") || x.Key.Contains(@".json") || x.Key.Contains(@".xml"))
+            .ToList();
         
-        // pakFile.Save(outputDir);
-        foreach (var entry in pakFile.Entries)
+        foreach (var entry in dataSheets)
         {
             var entryValue = entry.Value;
             entries.Add(entry.Key);
@@ -43,10 +41,9 @@ void ReadPaks()
     File.WriteAllText("files.txt", JsonSerializer.Serialize(entries));
 }
 
-void ReadDatasheets()
+static void ReadDatasheets()
 {
     Console.WriteLine("Read Datasheets");
-   // var file = "/Users/razfriman/Downloads/datatables/javelindata_tradeskillmining.datasheet";
     var allDataSheets = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.datasheet", SearchOption.AllDirectories);
 
     foreach (var dataSheet in allDataSheets)
@@ -57,7 +54,7 @@ void ReadDatasheets()
             WriteIndented = true
         });
 
-        var pos = dataSheet.LastIndexOf("\\") + 1;
+        var pos = dataSheet.LastIndexOf("\\", StringComparison.Ordinal) + 1;
         var name = dataSheet.Substring(pos, dataSheet.Length - pos);
         
         var fullPath = Path.Combine("jsons",  name.Replace(".datasheet", ".json"));
