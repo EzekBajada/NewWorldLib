@@ -24,16 +24,15 @@ static void ReadPaks()
             .Where(x => x.Key.Contains(@".datasheet") || x.Key.Contains(@".json") || x.Key.Contains(@".xml"))
             .ToList();
         
-        foreach (var entry in dataSheets)
+        foreach (var (key, entryValue) in dataSheets)
         {
-            var entryValue = entry.Value;
-            entries.Add(entry.Key);
+            entries.Add(key);
         
             //Open stream again
             var stream = File.OpenRead(file);
             entryValue.Reader = new BinaryReader(stream);
             
-            Console.WriteLine(entry.Key);
+            Console.WriteLine(key);
             entryValue.Save(outputDir);
         }
     }
